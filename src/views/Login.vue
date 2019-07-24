@@ -60,16 +60,18 @@
         methods: {
             async handleLogin(e) {
                 e.preventDefault();
-                // console.log('登录');
-                // const res = await this.$http.get('/api/login', {params: {
-                //     username: this.model.username,
-                //     password: this.model.password
-                // }});                
-                const res = await this.$http.post('/api/login', {
+                console.log('登录');
+                console.log(this,'this')
+                // console.log(this.$http,'this.$http')
+                const res = await this.$http.get('/api/login', {params: {
                     username: this.model.username,
                     password: this.model.password
-                });
-                console.log(res);
+                }});                
+                // const res = await this.$http.post('/api/login', {
+                //     username: this.model.username,
+                //     password: this.model.password
+                // });
+                console.log(res,'res');
                 
                 const {code, token, message} = res.data;
                 if (code == 0) {
