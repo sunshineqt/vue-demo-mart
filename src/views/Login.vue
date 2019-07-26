@@ -63,14 +63,16 @@
                 console.log('登录');
                 console.log(this,'this')
                 // console.log(this.$http,'this.$http')
-                const res = await this.$http.get('/api/login', {params: {
-                    username: this.model.username,
-                    password: this.model.password
-                }});                
-                // const res = await this.$http.post('/api/login', {
+                // get请求
+                // const res = await this.$http.get('/api/login', {params: {
                 //     username: this.model.username,
                 //     password: this.model.password
-                // });
+                // }});         
+                // post请求，request body形式传参,json形式传的   
+                const res = await this.$http.post('/api/login', {
+                    username: this.model.username,
+                    password: this.model.password
+                });
                 console.log(res,'res');
                 
                 const {code, token, message} = res.data;
