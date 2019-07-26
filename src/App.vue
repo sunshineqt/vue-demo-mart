@@ -8,8 +8,13 @@
       <a @click="logout" v-if="isLogin">Logout</a>
     </div>
      -->
-    <router-view/>
-    <cube-tab-bar
+     <!-- 动画，route-move为动画名称 -->
+     <transition name="route-move">
+        <router-view class="child-view" />
+     </transition>
+   
+    <!-- show-slider 导航滑动式切换 -->
+    <cube-tab-bar show-slider
     v-model="selectedLabel"
     :data="tabs"
     @change="changeHandler">
@@ -82,5 +87,27 @@
   left: 0;
   right: 0;
   background-color: #edf0fe;
+}
+.cube-tab-bar-slider {
+  /* 设置滑动条显示在tabbar上方 */
+  /* top:0; */
+}
+/* 页面滑动动画 */
+/* 入场前 */
+.route-move-enter {
+  transform:translate3d(-100%,0,0)
+}
+/* 出场后 */
+.route-move-leave-to{
+  transform: translate3d(100%,0,0)
+}
+.route-move-enter-active,route-move-leave-to-active{
+  transition: transform 0.3s;
+}
+.child-view{
+  /* position: absolute;
+  left:0;
+  top:0;
+  padding-bottom:36px; */
 }
 </style>
