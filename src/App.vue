@@ -14,11 +14,23 @@
      </transition>
    
     <!-- show-slider 导航滑动式切换 -->
+  <!--
     <cube-tab-bar show-slider
     v-model="selectedLabel"
     :data="tabs"
     @change="changeHandler">
+   </cube-tab-bar> 
+   -->
+  <cube-tab-bar show-slider
+    v-model="selectedLabel"
+    @change="changeHandler">
+      <cube-tab class="showBadge(item.label)?'cube-tab-relative':''" v-for="(item,index) in tabs" :key="index" :icon="item.icon" :label="item.label">
+        <span>{{item.label}}</span>
+        <!-- 气泡统计-购物车tab才显示 -->
+        <span class="badge" v-if="showBadge(item.label)">{{cartTotal}}</span>
+      </cube-tab>
    </cube-tab-bar>
+
   </div>
 </template>
 
@@ -52,10 +64,14 @@
       },
       changeHandler(val) {
         this.$router.push(val);
+      },
+      showBadge(label) {
+        console.log(label, this.cartTotal,'-=-=-=')
+        return label == 'Cart' && this.cartTotal >0
       }
     },
     computed:{
-      ...mapGetters(['isLogin'])
+      ...mapGetters(['isLogin','cartTotal'])
     }
   }
 </script>
@@ -109,5 +125,19 @@
   left:0;
   top:0;
   padding-bottom:36px; */
+}
+.cube-tab-relative{
+  position: relative;
+}
+.badge{
+    display: inline-block;
+    background: red;
+    color: white;
+    width: 1.8rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
 }
 </style>

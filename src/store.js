@@ -13,7 +13,20 @@ const store = new Vuex.Store({
     isLogin:state => {
       // 转换为布尔值
       return !!state.token;
-    } 
+    },
+    // 计算购物车中项目总个数
+    cartTotal:state => {
+      let num = 0;
+      state.cart.forEach(v => {
+        num += v.cartCount;
+      });
+      return num;
+    },
+     // 购物车总和,num起始值为0
+    //  total: state =>  state.cart.reduce((num, v) => num += v.cartCount * v.price, 0)
+     total: state => {
+       return state.cart.reduce((num, v) => num += v.cartCount * v.price, 0)
+     } 
   },
   mutations: {
     // 修改令牌
@@ -30,7 +43,22 @@ const store = new Vuex.Store({
           cartCount: 1
         })
       }
-    }
+    },
+    // 购物车单项商品减操作
+    countMinus(state, index) {
+      //找到当前的购物车项
+      const item = state.cart[index];
+      if(item.cartCount > 1) {
+        item.cartCount -= 1;
+      } else {
+        state.cart.splice(index, 1)
+      }
+    },
+    // 购物车单项商品加操作
+    countAdd(state, index) {
+      state.cart[index].cartCount += 1;
+    },
+   
   },
   actions: {
 
