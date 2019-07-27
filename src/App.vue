@@ -9,7 +9,8 @@
     </div>
      -->
      <!-- 动画，route-move为动画名称 -->
-     <transition name="route-move">
+     <!-- <transition name="route-move"> -->
+     <transition :name="transitionName">
         <router-view class="child-view" />
      </transition>
    
@@ -24,7 +25,8 @@
   <cube-tab-bar show-slider
     v-model="selectedLabel"
     @change="changeHandler">
-      <cube-tab class="showBadge(item.label)?'cube-tab-relative':''" v-for="(item,index) in tabs" :key="index" :icon="item.icon" :label="item.label">
+      <cube-tab class="showBadge(item.label)?'cube-tab-relative':''" v-for="(item,index) in tabs" 
+      :key="index" :icon="item.icon" :label="item.value">
         <span>{{item.label}}</span>
         <!-- 气泡统计-购物车tab才显示 -->
         <span class="badge" v-if="showBadge(item.label)">{{cartTotal}}</span>
@@ -44,13 +46,18 @@
           {label:'Home', value:'/', icon:'cubeic-home'},
           {label:'Cart', value:'/cart', icon:'cubeic-mall'},
           {label:'Me', value:'/login', icon:'cubeic-person'}
-        ]
+        ],
+        transitionName:'route-forward'
       }
     },
     // 页面没有刷新，编程触发路由变化,路由变化时tabs选中
     watch:{
       $route(route){
+        console.log(route,'route-app')
+        console.log(this.$router,'this.router')
           this.selectedLabel = route.path;
+          // 动态设置动画方式
+          this.transitionName = this.$router.transitionName;
       }
     },
     // 页面刷新触发，只执行一次
@@ -104,28 +111,34 @@
   right: 0;
   background-color: #edf0fe;
 }
-.cube-tab-bar-slider {
+/* .cube-tab-bar-slider { */
   /* 设置滑动条显示在tabbar上方 */
   /* top:0; */
-}
+/* } */
 /* 页面滑动动画 */
 /* 入场前 */
-.route-move-enter {
+.route-forward-enter {
   transform:translate3d(-100%,0,0)
 }
+.route-back-enter {
+  transform:translate3d(100%,0,0)
+}
 /* 出场后 */
-.route-move-leave-to{
+.route-forward-leave-to{
   transform: translate3d(100%,0,0)
 }
-.route-move-enter-active,route-move-leave-to-active{
+.route-back-leave-to{
+  transform: translate3d(-100%,0,0)
+}
+.route-forward-enter-active,route-forward-leave-to-active,.route-back-enter-active,route-back-leave-to-active{
   transition: transform 0.3s;
 }
-.child-view{
+/* .child-view{ */
   /* position: absolute;
   left:0;
   top:0;
   padding-bottom:36px; */
-}
+/* } */
 .cube-tab-relative{
   position: relative;
 }

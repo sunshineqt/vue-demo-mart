@@ -22,17 +22,19 @@ module.exports = {
           before(app) {
               // 中间件（请求和响应的预处理操作），可以在其他执行之前先执行,
               // 检查token
-              app.use(function(req,res,next) {
-                  if(/^\/api/.test(req.path)){ //只校验/api开头的请求
-                    if(req.path == '/api/login' || req.headers.token) {
-                      next();
-                    } else {
-                      res.sendStatus(401); //错误状态表示用户需要登录
-                    }
-                  }else{
-                    next()
-                  }
-              })
+              // app.use(function(req,res,next) {
+              //   console.log(req.headers.token,req.path,'req.headers.token-req.path')
+              //   console.log(/^\/api/.test(req.path),'888')
+              //     if(/^\/api/.test(req.path)){ //只校验/api开头的请求
+              //       if(req.path == '/api/login' || req.headers.token) {
+              //         next();
+              //       } else {
+              //         res.sendStatus(401); //错误状态表示用户需要登录
+              //       }
+              //     }else{
+              //       next()
+              //     }
+              // })
              
   
               app.get('/api/goods', function(req,res){

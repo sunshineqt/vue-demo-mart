@@ -4,10 +4,14 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios';
+import KHeader from './components/Header.vue';
 // 导入拦截器
-import interceptor from './http-interceptor';
+// import interceptor from './http-interceptor';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+
+// 全局引入Header组件,第二个参数为配置项，全局引入后再任何地方都可以直接使用，如在Home.vue中使用
+Vue.component('k-header',KHeader)
 
 // 挂载全局
 Vue.prototype.$http = axios;

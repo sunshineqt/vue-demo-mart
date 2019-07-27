@@ -10,6 +10,7 @@
         <div class="right">
           <div class="title">{{item.title}}</div>
           <div class="info">
+            <!-- $event原生事件 -->
             <i class="cubeic-add" @click.stop.prevent="addCart($event, item)"></i>
             <span>{{item.count}}人购买</span>
           </div>

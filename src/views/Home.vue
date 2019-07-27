@@ -1,5 +1,7 @@
 <template>
   <div class="home">
+    <!-- 页头 -->
+    <k-header title="测试商城"></k-header>
     <!-- 轮播图 -->
     <cube-slide :data="slider" :interval="5000">
       <cube-slide-item v-for="item in slider" :key="item.id">
@@ -14,12 +16,26 @@
     <cube-button @click="showCatg">选择分类</cube-button>
 
     <!-- 商品列表 -->
-    <goods-list :goods="filterGoods"></goods-list> 
+    <goods-list :goods="filterGoods" @addCart="onAddCart"></goods-list> 
 
 
     <!-- 商品分类列表 -->
     <cube-drawer ref="drawer" title="请选择分类" :data="[drawerList]" 
     @select="selectHandler"></cube-drawer>
+
+    <!-- 加购动画载体 -->
+    <div class="ball-wrap">
+      <transition
+       @before-enter="beforeEnter"
+       @enter="enter"
+       @after-enter="afterEnter"
+      >
+        <div class="ball" v-show="ball.show"></div>
+      </transition>  
+    </div>
+
+  <!-- 监听商品列表的点击事件，当点击加购时派发一个事件，根据事件可以知道当前点击事件的坐标，根据该坐标定位小球动画的起始坐标 -->
+
   </div>
 </template>
 
@@ -38,6 +54,11 @@ export default {
   name: 'home',
   data() {
     return {
+      ball:{
+        // 显示控制
+        show:true,
+        el:null  //目标dom引用 目标动画的载体
+      },
       slider: [],
       keys:[], // 可供使用的分类
       selectedKeys:[], // 分类过滤时使用
@@ -90,6 +111,39 @@ export default {
     },
     selectHandler(val){
       this.selectedKeys = [...val]
+    },
+    onAddCart(el){
+      // el则为动画元素
+      this.ball.el = el;
+      this.ball.show = true;
+
+    },
+    beforeEnter(el){
+      // 动画初始值设置
+      // 1.获取点击dom坐标
+      const dom = this.ball.el;
+      const rect = dom.getBoundingClientRect();
+      // getBoundingClientRect得到边界客户端的矩形,然后可以从盒子中拿到坐标
+      console.log(rect.top, rect.left);
+      // 2.计算点击坐标
+      const x = rect.left - window.innerWidth/2;
+      // 30为差值，可根据实际情况调整
+      const y = -(window.innerHeight - rect.top - 30);
+      el.style.display = 'block';
+      el.style.transform = `translate3d(${x}px, ${y}px, 0`;
+
+    },
+    enter(el, done){
+      // 获取offsetHeight触发重绘
+      document.body.offsetHeight;
+      // done动画完成，设置动画结束点
+      el.style.transform = 'translate3d(0,0,0)';
+      el.addEventListener('transitionend', done);
+
+    },
+    afterEnter(el){
+      this.ball.show = false;
+      el.style.display = 'none';
     }
   },
 }
@@ -99,11 +153,19 @@ export default {
     /* width: 100%; */
     height: auto;
   }
-  .slider{
-    /* width:100%; */
-    /* height:100% */
-  }
+
   .cube-slide-item > a > img {
     width:100%;
+  }
+  .ball-wrap .ball{
+    position: fixed;
+    left:50%;
+    bottom:10px;
+    z-index:200;
+    color:red;
+    width:30px;
+    height:30px;
+    /* 设置动画样式，拖一个曲线 */
+    transition:all 0.5s cubic-bezier(0.49, -0.29, 0.75, 0.41);
   }
 </style>
