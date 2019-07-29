@@ -24,7 +24,7 @@
     @select="selectHandler"></cube-drawer>
 
     <!-- 加购动画载体 -->
-    <div class="ball-wrap">
+  <!--   <div class="ball-wrap">
       <transition
        @before-enter="beforeEnter"
        @enter="enter"
@@ -32,7 +32,7 @@
       >
         <div class="ball" v-show="ball.show"></div>
       </transition>  
-    </div>
+    </div> -->
 
   <!-- 监听商品列表的点击事件，当点击加购时派发一个事件，根据事件可以知道当前点击事件的坐标，根据该坐标定位小球动画的起始坐标 -->
 
@@ -43,6 +43,8 @@
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
 import GoodsList from '@/components/GoodsList.vue';
+import create from '@/services/create';
+import BallAnim from '@/components/BallAnim.vue';
 const labels = {
   fe:'前端',
   python:'后端1',
@@ -54,11 +56,11 @@ export default {
   name: 'home',
   data() {
     return {
-      ball:{
+     /*  ball:{
         // 显示控制
         show:true,
         el:null  //目标dom引用 目标动画的载体
-      },
+      }, */
       slider: [],
       keys:[], // 可供使用的分类
       selectedKeys:[], // 分类过滤时使用
@@ -108,17 +110,45 @@ export default {
     showCatg() {
       // 显示分类列表
       this.$refs.drawer.show();
+
+      // 创建Notice实例
+      // cube-ui方式
+      // const notice = this.$createNotice();
+      // notice.add({content:'lllll', duration:2})
+
+      // 自定义方式
+      this.$notice.info({
+        duration:3,
+        content:'消息内容'
+      })
+
     },
     selectHandler(val){
       this.selectedKeys = [...val]
     },
     onAddCart(el){
       // el则为动画元素
-      this.ball.el = el;
-      this.ball.show = true;
+      // this.ball.el = el;
+      // this.ball.show = true;
+
+      // 创建小球动画实例，并开始播放，并监听结束事件
+   /*    const anim = this.$createBallAnim({
+        el, onTransitionend(){
+          // 销毁当前实例避免内存泄漏
+          anim.remove(); // 动画结束，移除小球组件实例
+        }
+      })
+      anim.start(); */
+
+      // 手动创建组件实例
+      const anim =  create(BallAnim, {el});
+      anim.start();
+      anim.$on('transitionend', ()=>{
+        anim.remove();
+      })
 
     },
-    beforeEnter(el){
+   /*  beforeEnter(el){
       // 动画初始值设置
       // 1.获取点击dom坐标
       const dom = this.ball.el;
@@ -144,7 +174,7 @@ export default {
     afterEnter(el){
       this.ball.show = false;
       el.style.display = 'none';
-    }
+    } */
   },
 }
 </script>
@@ -157,15 +187,15 @@ export default {
   .cube-slide-item > a > img {
     width:100%;
   }
-  .ball-wrap .ball{
+ /* .ball-wrap .ball{
     position: fixed;
     left:50%;
     bottom:10px;
     z-index:200;
     color:red;
     width:30px;
-    height:30px;
+    height:30px; */
     /* 设置动画样式，拖一个曲线 */
-    transition:all 0.5s cubic-bezier(0.49, -0.29, 0.75, 0.41);
-  }
+    /* transition:all 0.5s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+  }  */
 </style>
